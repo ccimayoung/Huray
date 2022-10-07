@@ -1,0 +1,16 @@
+{
+	"surveys": [
+		{
+			"title": "심뇌혈관 위험도",
+			"questions": [0, 2]
+		},
+		{
+			"title": "건강관리",
+			"questions": [0, 1, 2, 3]
+		},
+		{
+			"title": "개인 의지 및 식습관 목표",
+			"questions": [0, 2, 3]
+		}
+	]	
+}
