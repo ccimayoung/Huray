@@ -1,20 +1,19 @@
 import React from "react";
 import { PageLayout } from "../component/layout/PageLayout";
 import styled from "styled-components";
-import { AllBtn, AllColumnBox, AllFont, AllFontBox } from "../style/AllStyle";
+import { AllBtn, AllColumnBox, AllFont } from "../style/AllStyle";
 import { BackButton } from "../component/BackButton";
 import surveyimg from "../assets/icons/image-survey.png";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import { useRecoilState } from "recoil";
-import { surveyTypeState } from "../recoil/store";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { surveyTypeState, userAnswerState } from "../recoil/store";
 
 export const HeadLine = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* background-color: pink; */
   position: relative;
   margin: 20px 0;
 `;
@@ -25,6 +24,7 @@ export const SurveyStart = () => {
   const id = Number(params.get("id"));
   const name = params.get("name");
   const [surveyType, setSurveyType] = useRecoilState(surveyTypeState);
+  const setUserAnswer = useSetRecoilState(userAnswerState);
 
   const baseApi = axios.create({
     baseURL: "http://localhost:3000",
@@ -33,15 +33,25 @@ export const SurveyStart = () => {
 
   const suerveyGet = async () => {
     await baseApi.get(`/surveys.json`).then((res) => {
-      setSurveyType({ surveys: res.data.surveys, userId: id, userName: name });
+      setSurveyType({
+        surveys: res.data.surveys,
+        userId: id,
+        userName: name,
+      });
+      const questionNumber = res.data.surveys[id].questions.length;
+      const userAnswerSheetObject = { question: "", answer: [] };
+      const userAnswerSheetArray = new Array(questionNumber);
+      userAnswerSheetArray.fill({
+        ...userAnswerSheetObject,
+        answer: [...userAnswerSheetObject.answer],
+      });
+      setUserAnswer(userAnswerSheetArray);
     });
   };
-
   React.useEffect(() => {
     suerveyGet();
   }, []);
 
-  console.log(surveyType);
   return (
     <PageLayout>
       <HeadLine className="상단Nav, 헤드라인">
@@ -57,7 +67,7 @@ export const SurveyStart = () => {
           {`설문을 통해 나의 건강 상태를 확인하고,
           개선할 습관이 무엇인지 알아보아요!
           결과에 따라 나만의 관리 목표를 설정하면
-          헬스매니저가 ${name}님께 맞는
+          헬스매니저가 ${surveyType ? surveyType.userName : name}님께 맞는
           건강관리 서비스를 제공합니다.`}
         </AllFont>
         <img
@@ -76,9 +86,10 @@ export const SurveyStart = () => {
         </AllFont>
       </AllColumnBox>
       <AllBtn
+        className="설문시작버튼"
         margin="20px 0"
         onClick={() => {
-          nav("/surveyselectone");
+          nav("/surveyprogress");
         }}
       >
         <AllFont isBold={true} size={14}>
