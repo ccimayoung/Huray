@@ -1,7 +1,6 @@
 import { ArrowImg } from "../style/AllStyle";
 import styled from "styled-components";
 import backbtnimg from "../assets/icons/icon-back-black.png";
-import { useNavigate } from "react-router";
 
 export const BackArrowImg = styled(ArrowImg)`
   position: fixed;
@@ -14,11 +13,10 @@ interface BtnProps {
 }
 
 export const BackButton = ({ btnOnClick }: BtnProps) => {
-  const nav = useNavigate();
   return (
     <BackArrowImg
       src={backbtnimg}
-      alt="뒤로가기버튼"
+      alt="<- 뒤로가기 이미지"
       onClick={() => {
         if (btnOnClick) {
           btnOnClick();

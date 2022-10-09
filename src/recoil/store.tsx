@@ -1,10 +1,10 @@
 import { atom } from "recoil";
 
-export type surveyTypeGather = {
+export interface surveyTypeGather {
   surveys: { title: string; questions: number[] }[];
   userId: number;
   userName: string | null;
-};
+}
 
 export const surveyTypeState = atom<surveyTypeGather>({
   key: "surveyTypeState",
@@ -15,10 +15,10 @@ export const surveyTypeState = atom<surveyTypeGather>({
   },
 });
 
-export type questionGather = {
+export interface questionGather {
   questions: { title: string; mode: number; answers: number[] }[];
   currentnumber: number;
-};
+}
 
 export const questionState = atom<questionGather>({
   key: "questionState",
@@ -45,22 +45,7 @@ export const userAnswerState = atom<userAnswerGather>({
   default: [],
 });
 
-export const selectOneState = atom<number>({
-  key: "selectOneState",
-  default: -1,
-});
-
-export const selectVariousState = atom<number[]>({
-  key: "selectVariousState",
-  default: [],
-});
-
-export const selectOneAnswerState = atom<string[]>({
-  key: "selectOneAnswerState",
-  default: [],
-});
-
-export const selectVariousAnswerState = atom<string[]>({
-  key: "selectVariousAnswerState",
-  default: [],
+export const modalStste = atom<boolean>({
+  key: "modalState",
+  default: false,
 });
